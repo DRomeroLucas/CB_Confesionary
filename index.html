@@ -327,39 +327,6 @@
   .share-status{ font-size:12px; color:var(--brand-glow); margin:4px 0 0; }
   .share-status.error{ color:var(--brand-amber); }
 
-  .gear{
-    position:absolute; top:10px; right:10px;
-    width:30px;height:30px;border-radius:50%;
-    background:transparent;border:none;color:var(--ink-faint);
-    font-size:16px;cursor:pointer;
-  }
-  .gear:hover{ color:var(--brand-green-bright); }
-
-  .settings{
-    margin-top:14px;
-    background:var(--panel);
-    border:1px solid var(--brand-gray);
-    border-radius:12px;
-    padding:14px;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    font-family: 'Poppins', sans-serif;
-  }
-  .settings label{ font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); }
-  .settings input{
-    width:100%;
-    background:var(--bg-1);
-    border:1px solid var(--brand-gray);
-    border-radius:8px;
-    color:var(--ink);
-    padding:9px 10px;
-    font-size:13px;
-    font-family: 'Poppins', sans-serif;
-  }
-  .settings .row{ display:flex; gap:8px; }
-  .settings small{ color:var(--ink-faint); font-size:11px; line-height:1.4; }
-
   .footer{
     text-align:center;
     margin:22px 0 0;
@@ -386,8 +353,6 @@
 <div class="scene">
   <div class="confessional">
     <div class="grille">
-      <button class="gear" id="gearBtn" aria-label="Configurar conexión" title="Configurar conexión">⚙</button>
-
       <p class="eyebrow">CarbonBox presenta</p>
       <h1>Confesionario<br>Ambiental</h1>
 
@@ -446,16 +411,6 @@
         <button class="btn" id="btnRetry">Reintentar</button>
       </div>
 
-      <!-- Ajustes -->
-      <div class="settings" id="settingsPanel" hidden>
-        <label for="webhookUrl">URL del webhook de n8n</label>
-        <div class="row">
-          <input type="text" id="webhookUrl" placeholder="https://tu-n8n.dominio.com/webhook/confesion">
-          <button class="btn" id="saveSettings">Guardar</button>
-        </div>
-        <small>Si se deja vacío o falla la conexión, la cabina entra en modo demo con penitencias de ejemplo.</small>
-      </div>
-
       <p class="footer">Powered by <b>CarbonBox</b></p>
     </div>
   </div>
@@ -492,21 +447,9 @@
     Object.entries(stages).forEach(([k, el]) => { el.hidden = (k !== name); });
   }
 
-  // ---------- Ajustes (URL del webhook) ----------
-  const gearBtn = $('gearBtn');
-  const settingsPanel = $('settingsPanel');
-  const webhookInput = $('webhookUrl');
-
-  let webhookUrl = '';
-  try { webhookUrl = localStorage.getItem('confesionario_webhook') || ''; } catch(e) {}
-  webhookInput.value = webhookUrl;
-
-  gearBtn.addEventListener('click', () => { settingsPanel.hidden = !settingsPanel.hidden; });
-  $('saveSettings').addEventListener('click', () => {
-    webhookUrl = webhookInput.value.trim();
-    try { localStorage.setItem('confesionario_webhook', webhookUrl); } catch(e) {}
-    settingsPanel.hidden = true;
-  });
+  // URL fija del webhook de n8n — sin pantalla de ajustes que se pueda
+  // olvidar configurar el día del evento.
+  const webhookUrl = 'https://kim-carbonbox.app.n8n.cloud/webhook/confesion';
 
   // ---------- Grabación ----------
   let mediaRecorder, chunks = [], timerInterval, seconds = 0, stream;
@@ -546,12 +489,6 @@
     showStage('processing');
     $('processingMsg').textContent = 'El Padre Carbono está escuchando tu confesión...';
     const blob = new Blob(chunks, { type: 'audio/webm' });
-
-    if (!webhookUrl) {
-      await fakeDelay();
-      renderResult(demoPenitencia(), true);
-      return;
-    }
 
     try {
       const form = new FormData();

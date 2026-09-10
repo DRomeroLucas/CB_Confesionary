@@ -38,32 +38,25 @@ flowchart LR
 poner una tablet o laptop dentro de la cabina con el navegador abierto en pantalla
 completa.
 
-## 3. Estado actual — ya está creado en tu n8n
+## 3. Estado actual — activo en producción
 
-El workflow **"Confesionario Ambiental IA"** ya está creado directamente en tu instancia
-(vía el conector MCP de n8n), como borrador sin activar:
+El workflow **"Confesionario Ambiental IA"** está **activo** en n8n, escuchando
+permanentemente (no depende de que alguien abra n8n el día del evento):
 
 - Workflow: <https://kim-carbonbox.app.n8n.cloud/workflow/JBFZrMrHk0CcvfhI>
-- Credenciales asignadas automáticamente: `n8n free OpenAI API credits` (Whisper) y
-  `KIMSA` (Claude/Anthropic) — ambas ya existían en tu cuenta.
-- Nodos: `Recibir confesión` (Webhook) → `Transcribir confesión (Whisper)` →
-  `Generar penitencia (Padre Carbono)` (Claude) → `Parsear JSON de la IA` (Code) →
-  `Responder a la cabina` (Respond to Webhook).
+- Credenciales: `n8n free OpenAI API credits` (Whisper), `KIMSA` (Claude/Anthropic)
+  y `Gmail CarbonBox` (envío de correo) — ya conectadas.
+- La URL del webhook (`https://kim-carbonbox.app.n8n.cloud/webhook/confesion`) está
+  **fija dentro de [`index.html`](index.html)** — no hay pantalla de ajustes ni nada
+  que configurar en la tablet el día del evento; se abre y ya funciona.
 
-**Para probarlo ahora** (el workflow está inactivo, así que usa la URL de test):
-1. Abre el workflow en el link de arriba.
-2. Pulsa "Execute workflow" (o "Listen for test event" en el nodo Webhook) para que
-   quede escuchando una ejecución de prueba.
-3. Manda un audio de prueba a `https://kim-carbonbox.app.n8n.cloud/webhook-test/confesion`
-   (campo `audio`, `multipart/form-data`) — por ejemplo pegando esa URL en el ⚙️ de
-   [`index.html`](index.html) y grabando una confesión de prueba.
-4. Revisa en n8n que cada nodo haya corrido bien y que la respuesta tenga
-   `pecado`, `categoria`, `penitencia`, `dificultad` y `mensaje`.
+Rutas activas:
 
-**Cuando quieras dejarlo en producción para el evento:** dime "actívalo" y lo publico
-(`publish_workflow`) — a partir de ahí la URL pasa a ser
-`https://kim-carbonbox.app.n8n.cloud/webhook/confesion` (sin `-test`) y queda escuchando
-sola, sin que tengas que abrir n8n cada vez.
+| Ruta | Método | Para qué |
+|---|---|---|
+| `/webhook/confesion` | POST | Recibe el audio, genera la penitencia |
+| `/webhook/confesion-card` | GET (`?id=...`) | Página con la tarjeta + botón de descarga (destino del QR) |
+| `/webhook/confesion-email` | POST | Envía la tarjeta por correo |
 
 ## 3.1 El flujo de n8n (referencia / cómo está armado)
 
@@ -121,10 +114,10 @@ necesitar impresora ni pedir datos de contacto.
 
 ## 5. Prueba rápida sin n8n
 
-Abrí [`index.html`](index.html) directo en un navegador: si no hay un
-webhook configurado (o falla la conexión), entra en **modo demo** y genera una
+Abrí [`index.html`](index.html) directo en un navegador: si la llamada al webhook
+falla (por ejemplo, sin conexión a internet), entra en **modo demo** y genera una
 penitencia de ejemplo localmente, así puedes ver y ajustar el diseño de la tarjeta
-antes de conectar el backend real.
+aunque el backend no responda.
 
 ## 6. Guardar la penitencia (QR + correo)
 
@@ -137,9 +130,11 @@ Cuando la confesión es válida, la cabina ahora muestra un **código QR** y un 
 - La cabina arma el QR con ese `cardUrl` (usando `api.qrserver.com`, sin librerías
   extra) y lo muestra bajo la tarjeta.
 - Esa URL abre una página HTML (rama nueva del mismo workflow, `GET /confesion-card`)
-  con la tarjeta ya armada y un botón **"Descargar imagen"** que usa `html2canvas`
+  con la tarjeta ya armada y un botón **"Descargar imagen"** que usa `dom-to-image`
   para guardar la tarjeta como PNG directamente en el celular de la persona — sin
-  necesitar un servicio externo de renderizado de imágenes.
+  necesitar un servicio externo de renderizado de imágenes. (Usamos `dom-to-image`
+  y no `html2canvas` porque este último crea un iframe interno que algunos
+  navegadores/apps móviles bloquean por seguridad.)
 - Si alguien no puede escanear, puede escribir su correo: la cabina llama a
   `POST /webhook/confesion-email` (`{ id, email }`), que busca la confesión en la
   Data Table y la envía por Gmail (credencial `Gmail CarbonBox`) con el enlace a su

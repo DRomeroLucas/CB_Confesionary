@@ -6,12 +6,17 @@
       "name": "Recibir confesión",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
-      "position": [240, 300],
+      "position": [
+        240,
+        300
+      ],
       "parameters": {
         "httpMethod": "POST",
         "path": "confesion",
         "responseMode": "responseNode",
-        "options": { "binaryData": true }
+        "options": {
+          "binaryData": true
+        }
       }
     },
     {
@@ -19,15 +24,22 @@
       "name": "Transcribir confesión (Whisper)",
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 2.3,
-      "position": [540, 300],
+      "position": [
+        540,
+        300
+      ],
       "parameters": {
         "resource": "audio",
         "operation": "transcribe",
         "binaryPropertyName": "audio",
-        "options": { "language": "es" }
+        "options": {
+          "language": "es"
+        }
       },
       "credentials": {
-        "openAiApi": { "name": "n8n free OpenAI API credits" }
+        "openAiApi": {
+          "name": "n8n free OpenAI API credits"
+        }
       }
     },
     {
@@ -35,13 +47,26 @@
       "name": "Generar penitencia (Padre Carbono)",
       "type": "@n8n/n8n-nodes-langchain.anthropic",
       "typeVersion": 1,
-      "position": [840, 300],
+      "position": [
+        840,
+        300
+      ],
       "parameters": {
         "resource": "text",
         "operation": "message",
-        "modelId": { "__rl": true, "mode": "list", "value": "claude-sonnet-5", "cachedResultName": "claude-sonnet-5" },
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-5",
+          "cachedResultName": "claude-sonnet-5"
+        },
         "messages": {
-          "values": [{ "role": "user", "content": "={{ $json.text }}" }]
+          "values": [
+            {
+              "role": "user",
+              "content": "={{ $json.text }}"
+            }
+          ]
         },
         "simplify": false,
         "options": {
@@ -50,7 +75,9 @@
         }
       },
       "credentials": {
-        "anthropicApi": { "name": "KIMSA" }
+        "anthropicApi": {
+          "name": "KIMSA"
+        }
       }
     },
     {
@@ -58,7 +85,10 @@
       "name": "Parsear JSON de la IA",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1140, 300],
+      "position": [
+        1140,
+        300
+      ],
       "parameters": {
         "mode": "runOnceForAllItems",
         "language": "javaScript",
@@ -70,11 +100,28 @@
       "name": "Es pecado ambiental",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [1440, 300],
+      "position": [
+        1440,
+        300
+      ],
       "parameters": {
         "conditions": {
-          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
-          "conditions": [{ "leftValue": "={{ $json.valida }}", "operator": { "type": "boolean", "operation": "equals" }, "rightValue": true }],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.valida }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              },
+              "rightValue": true
+            }
+          ],
           "combinator": "and"
         }
       }
@@ -84,7 +131,10 @@
       "name": "Generar ID de confesión",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1700, 180],
+      "position": [
+        1700,
+        180
+      ],
       "parameters": {
         "mode": "runOnceForAllItems",
         "language": "javaScript",
@@ -96,11 +146,18 @@
       "name": "Guardar confesión",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
-      "position": [1960, 180],
+      "position": [
+        1960,
+        180
+      ],
       "parameters": {
         "resource": "row",
         "operation": "insert",
-        "dataTableId": { "__rl": true, "mode": "name", "value": "confesiones_carbonbox" },
+        "dataTableId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "confesiones_carbonbox"
+        },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
@@ -113,13 +170,41 @@
             "email": ""
           },
           "schema": [
-            { "id": "confessionId", "displayName": "confessionId", "type": "string" },
-            { "id": "pecado", "displayName": "pecado", "type": "string" },
-            { "id": "categoria", "displayName": "categoria", "type": "string" },
-            { "id": "penitencia", "displayName": "penitencia", "type": "string" },
-            { "id": "dificultad", "displayName": "dificultad", "type": "string" },
-            { "id": "mensaje", "displayName": "mensaje", "type": "string" },
-            { "id": "email", "displayName": "email", "type": "string" }
+            {
+              "id": "confessionId",
+              "displayName": "confessionId",
+              "type": "string"
+            },
+            {
+              "id": "pecado",
+              "displayName": "pecado",
+              "type": "string"
+            },
+            {
+              "id": "categoria",
+              "displayName": "categoria",
+              "type": "string"
+            },
+            {
+              "id": "penitencia",
+              "displayName": "penitencia",
+              "type": "string"
+            },
+            {
+              "id": "dificultad",
+              "displayName": "dificultad",
+              "type": "string"
+            },
+            {
+              "id": "mensaje",
+              "displayName": "mensaje",
+              "type": "string"
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "type": "string"
+            }
           ]
         }
       },
@@ -130,20 +215,63 @@
       "name": "Agregar URL de tarjeta",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [2220, 180],
+      "position": [
+        2220,
+        180
+      ],
       "parameters": {
         "mode": "manual",
         "includeOtherFields": false,
         "assignments": {
           "assignments": [
-            { "id": "a1", "name": "valida", "value": "={{ $('Generar ID de confesión').item.json.valida }}", "type": "boolean" },
-            { "id": "a2", "name": "id", "value": "={{ $('Generar ID de confesión').item.json.id }}", "type": "string" },
-            { "id": "a3", "name": "pecado", "value": "={{ $('Generar ID de confesión').item.json.pecado }}", "type": "string" },
-            { "id": "a4", "name": "categoria", "value": "={{ $('Generar ID de confesión').item.json.categoria }}", "type": "string" },
-            { "id": "a5", "name": "penitencia", "value": "={{ $('Generar ID de confesión').item.json.penitencia }}", "type": "string" },
-            { "id": "a6", "name": "dificultad", "value": "={{ $('Generar ID de confesión').item.json.dificultad }}", "type": "string" },
-            { "id": "a7", "name": "mensaje", "value": "={{ $('Generar ID de confesión').item.json.mensaje }}", "type": "string" },
-            { "id": "a8", "name": "cardUrl", "value": "={{ 'https://TU-N8N.app.n8n.cloud/webhook/confesion-card?id=' + $('Generar ID de confesión').item.json.id }}", "type": "string" }
+            {
+              "id": "a1",
+              "name": "valida",
+              "value": "={{ $('Generar ID de confesión').item.json.valida }}",
+              "type": "boolean"
+            },
+            {
+              "id": "a2",
+              "name": "id",
+              "value": "={{ $('Generar ID de confesión').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "a3",
+              "name": "pecado",
+              "value": "={{ $('Generar ID de confesión').item.json.pecado }}",
+              "type": "string"
+            },
+            {
+              "id": "a4",
+              "name": "categoria",
+              "value": "={{ $('Generar ID de confesión').item.json.categoria }}",
+              "type": "string"
+            },
+            {
+              "id": "a5",
+              "name": "penitencia",
+              "value": "={{ $('Generar ID de confesión').item.json.penitencia }}",
+              "type": "string"
+            },
+            {
+              "id": "a6",
+              "name": "dificultad",
+              "value": "={{ $('Generar ID de confesión').item.json.dificultad }}",
+              "type": "string"
+            },
+            {
+              "id": "a7",
+              "name": "mensaje",
+              "value": "={{ $('Generar ID de confesión').item.json.mensaje }}",
+              "type": "string"
+            },
+            {
+              "id": "a8",
+              "name": "cardUrl",
+              "value": "={{ 'https://TU-N8N.app.n8n.cloud/webhook/confesion-card?id=' + $('Generar ID de confesión').item.json.id }}",
+              "type": "string"
+            }
           ]
         }
       },
@@ -154,7 +282,10 @@
       "name": "Responder a la cabina",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
-      "position": [2460, 260],
+      "position": [
+        2460,
+        260
+      ],
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ $json }}"
@@ -165,7 +296,10 @@
       "name": "Recibir tarjeta",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
-      "position": [240, 700],
+      "position": [
+        240,
+        700
+      ],
       "parameters": {
         "httpMethod": "GET",
         "path": "confesion-card",
@@ -178,14 +312,27 @@
       "name": "Buscar confesión",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
-      "position": [540, 700],
+      "position": [
+        540,
+        700
+      ],
       "parameters": {
         "resource": "row",
         "operation": "get",
-        "dataTableId": { "__rl": true, "mode": "name", "value": "confesiones_carbonbox" },
+        "dataTableId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "confesiones_carbonbox"
+        },
         "matchType": "allConditions",
         "filters": {
-          "conditions": [{ "keyName": "confessionId", "condition": "eq", "keyValue": "={{ $json.query.id }}" }]
+          "conditions": [
+            {
+              "keyName": "confessionId",
+              "condition": "eq",
+              "keyValue": "={{ $json.query.id }}"
+            }
+          ]
         },
         "returnAll": false,
         "limit": 1,
@@ -197,11 +344,14 @@
       "name": "Armar página de tarjeta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [840, 700],
+      "position": [
+        840,
+        700
+      ],
       "parameters": {
         "mode": "runOnceForAllItems",
         "language": "javaScript",
-        "jsCode": "function esc(s){\n  return String(s == null ? '' : s)\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;')\n    .replace(/\"/g, '&quot;');\n}\n\nconst row = $input.first().json || {};\nconst found = !!row.confessionId;\n\nconst CAT_ICON = { movilidad:'✈️', energia:'💡', consumo:'🛍️', alimentacion:'🍔', residuos:'🗑️', agua:'🚿', otro:'🌍' };\nconst categoria = row.categoria || 'otro';\nconst icon = CAT_ICON[categoria] || '🌍';\n\nconst notFoundHtml = '<!doctype html><html lang=\"es\"><head><meta charset=\"UTF-8\"><title>No encontrada</title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">' +\n  '<style>body{margin:0;min-height:100vh;background:#0D1054;color:#fff;font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;}</style>' +\n  '</head><body><p>No encontramos esa confesión. Puede que el enlace haya expirado.</p></body></html>';\n\nconst foundHtml = '<!doctype html><html lang=\"es\"><head><meta charset=\"UTF-8\"><title>Tu penitencia — CarbonBox</title>' +\n  '<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">' +\n  '<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">' +\n  '<link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap\" rel=\"stylesheet\">' +\n  '<script src=\"https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js\"><\\/script>' +\n  '<style>' +\n  ':root{--bg-0:#080A38;--bg-1:#0D1054;--brand-green:#2F6B4A;--brand-glow:#4ADE80;--brand-gray:#7A82A0;--ink:#FFFFFF;--ink-dim:#C3C8E8;--paper:#F3F4FA;--paper-ink:#12154A;--paper-dim:#565C84;}' +\n  '*{box-sizing:border-box;}' +\n  'body{margin:0;min-height:100vh;background:linear-gradient(180deg,var(--bg-0),var(--bg-1) 60%);color:var(--ink);font-family:\"Poppins\",Arial,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:32px 16px;}' +\n  '.brand{font-weight:800;letter-spacing:.08em;color:var(--brand-glow);font-size:12px;text-transform:uppercase;text-align:center;}' +\n  '.ticket{width:100%;max-width:360px;background:var(--paper);color:var(--paper-ink);border-radius:14px;padding:24px 20px;box-shadow:0 20px 40px -15px rgba(0,0,0,.6);}' +\n  '.ticket-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed var(--brand-gray);padding-bottom:8px;margin-bottom:12px;font-weight:700;font-size:12px;}' +\n  '.cat-pill{font-size:10px;font-weight:600;text-transform:uppercase;background:var(--brand-green);color:#fff;padding:3px 8px;border-radius:999px;}' +\n  '.label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--paper-dim);margin:0 0 4px;}' +\n  '.sin{font-size:13px;margin:0 0 14px;}' +\n  '.pen{font-size:15px;font-weight:600;color:#1620A4;margin:0 0 14px;}' +\n  '.msg{font-style:italic;font-size:13px;color:var(--paper-dim);text-align:center;margin-top:14px;}' +\n  '.btn{font-family:\"Poppins\",sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:#08240F;background:var(--brand-glow);border:none;border-radius:999px;padding:14px 28px;cursor:pointer;}' +\n  '.hint{font-size:12px;color:var(--ink-dim);text-align:center;max-width:300px;}' +\n  '</style></head><body>' +\n  '<p class=\"brand\">CarbonBox · Confesionario Ambiental</p>' +\n  '<div class=\"ticket\" id=\"ticket\">' +\n    '<div class=\"ticket-head\"><span>ABSOLUCIÓN N.º ' + esc(String(row.confessionId).slice(-4)) + '</span><span class=\"cat-pill\">' + icon + ' ' + esc(categoria) + '</span></div>' +\n    '<p class=\"label\">Pecado confesado</p><p class=\"sin\">\"' + esc(row.pecado) + '\"</p>' +\n    '<p class=\"label\">Tu penitencia</p><p class=\"pen\">' + esc(row.penitencia) + '</p>' +\n    '<p class=\"msg\">' + esc(row.mensaje) + '</p>' +\n  '</div>' +\n  '<button class=\"btn\" id=\"btnDownload\">Descargar imagen</button>' +\n  '<p class=\"hint\">Toca el botón para guardar tu penitencia como imagen en tu celular.</p>' +\n  '<script>document.getElementById(\"btnDownload\").addEventListener(\"click\", function(){ html2canvas(document.getElementById(\"ticket\"), { backgroundColor: \"#F3F4FA\", scale: 2 }).then(function(canvas){ var link = document.createElement(\"a\"); link.download = \"penitencia-carbonbox.png\"; link.href = canvas.toDataURL(\"image/png\"); link.click(); }); });<\\/script>' +\n  '</body></html>';\n\nreturn [{ json: { html: found ? foundHtml : notFoundHtml } }];"
+        "jsCode": "function esc(s){\n  return String(s == null ? '' : s)\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;')\n    .replace(/\"/g, '&quot;');\n}\n\nconst row = $input.first().json || {};\nconst found = !!row.confessionId;\n\nconst CAT_ICON = { movilidad:'✈️', energia:'💡', consumo:'🛍️', alimentacion:'🍔', residuos:'🗑️', agua:'🚿', otro:'🌍' };\nconst categoria = row.categoria || 'otro';\nconst icon = CAT_ICON[categoria] || '🌍';\n\nconst notFoundHtml = '<!doctype html><html lang=\"es\"><head><meta charset=\"UTF-8\"><title>No encontrada</title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">' +\n  '<style>body{margin:0;min-height:100vh;background:#0D1054;color:#fff;font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;}</style>' +\n  '</head><body><p>No encontramos esa confesión. Puede que el enlace haya expirado.</p></body></html>';\n\nconst foundHtml = '<!doctype html><html lang=\"es\"><head><meta charset=\"UTF-8\"><title>Tu penitencia — CarbonBox</title>' +\n  '<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">' +\n  '<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">' +\n  '<link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap\" rel=\"stylesheet\">' +\n  '<script src=\"https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js\"><\\/script>' +\n  '<style>' +\n  ':root{--bg-0:#080A38;--bg-1:#0D1054;--brand-green:#2F6B4A;--brand-glow:#4ADE80;--brand-gray:#7A82A0;--ink:#FFFFFF;--ink-dim:#C3C8E8;--paper:#F3F4FA;--paper-ink:#12154A;--paper-dim:#565C84;}' +\n  '*{box-sizing:border-box;}' +\n  'body{margin:0;min-height:100vh;background:linear-gradient(180deg,var(--bg-0),var(--bg-1) 60%);color:var(--ink);font-family:\"Poppins\",Arial,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:32px 16px;}' +\n  '.brand{font-weight:800;letter-spacing:.08em;color:var(--brand-glow);font-size:12px;text-transform:uppercase;text-align:center;}' +\n  '.ticket{width:100%;max-width:360px;background:var(--paper);color:var(--paper-ink);border-radius:14px;padding:24px 20px;box-shadow:0 20px 40px -15px rgba(0,0,0,.6);}' +\n  '.ticket-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed var(--brand-gray);padding-bottom:8px;margin-bottom:12px;font-weight:700;font-size:12px;}' +\n  '.cat-pill{font-size:10px;font-weight:600;text-transform:uppercase;background:var(--brand-green);color:#fff;padding:3px 8px;border-radius:999px;}' +\n  '.label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--paper-dim);margin:0 0 4px;}' +\n  '.sin{font-size:13px;margin:0 0 14px;}' +\n  '.pen{font-size:15px;font-weight:600;color:#1620A4;margin:0 0 14px;}' +\n  '.msg{font-style:italic;font-size:13px;color:var(--paper-dim);text-align:center;margin-top:14px;}' +\n  '.btn{font-family:\"Poppins\",sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:#08240F;background:var(--brand-glow);border:none;border-radius:999px;padding:14px 28px;cursor:pointer;}' +\n  '.hint{font-size:12px;color:var(--ink-dim);text-align:center;max-width:300px;}' +\n  '</style></head><body>' +\n  '<p class=\"brand\">CarbonBox · Confesionario Ambiental</p>' +\n  '<div class=\"ticket\" id=\"ticket\">' +\n    '<div class=\"ticket-head\"><span>ABSOLUCIÓN N.º ' + esc(String(row.confessionId).slice(-4)) + '</span><span class=\"cat-pill\">' + icon + ' ' + esc(categoria) + '</span></div>' +\n    '<p class=\"label\">Pecado confesado</p><p class=\"sin\">\"' + esc(row.pecado) + '\"</p>' +\n    '<p class=\"label\">Tu penitencia</p><p class=\"pen\">' + esc(row.penitencia) + '</p>' +\n    '<p class=\"msg\">' + esc(row.mensaje) + '</p>' +\n  '</div>' +\n  '<button class=\"btn\" id=\"btnDownload\">Descargar imagen</button>' +\n  '<p class=\"hint\" id=\"dlHint\">Toca el botón para guardar tu penitencia como imagen en tu celular.</p>' +\n  '<script>document.getElementById(\"btnDownload\").addEventListener(\"click\", function(){ var node = document.getElementById(\"ticket\"); var hint = document.getElementById(\"dlHint\"); domtoimage.toPng(node, { bgcolor: \"#F3F4FA\", width: node.offsetWidth * 2, height: node.offsetHeight * 2, style: { transform: \"scale(2)\", transformOrigin: \"top left\" } }).then(function(dataUrl){ var link = document.createElement(\"a\"); link.download = \"penitencia-carbonbox.png\"; link.href = dataUrl; document.body.appendChild(link); link.click(); link.remove(); }).catch(function(err){ hint.textContent = \"No se pudo generar la imagen. Toma una captura de pantalla en su lugar.\"; }); });<\\/script>' +\n  '</body></html>';\n\nreturn [{ json: { html: found ? foundHtml : notFoundHtml } }];"
       }
     },
     {
@@ -209,13 +359,21 @@
       "name": "Responder tarjeta HTML",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
-      "position": [1140, 700],
+      "position": [
+        1140,
+        700
+      ],
       "parameters": {
         "respondWith": "text",
         "responseBody": "={{ $json.html }}",
         "options": {
           "responseHeaders": {
-            "entries": [{ "name": "Content-Type", "value": "text/html; charset=utf-8" }]
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html; charset=utf-8"
+              }
+            ]
           }
         }
       }
@@ -225,7 +383,10 @@
       "name": "Recibir email",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
-      "position": [240, 1000],
+      "position": [
+        240,
+        1000
+      ],
       "parameters": {
         "httpMethod": "POST",
         "path": "confesion-email",
@@ -238,14 +399,27 @@
       "name": "Buscar confesión (email)",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
-      "position": [540, 1000],
+      "position": [
+        540,
+        1000
+      ],
       "parameters": {
         "resource": "row",
         "operation": "get",
-        "dataTableId": { "__rl": true, "mode": "name", "value": "confesiones_carbonbox" },
+        "dataTableId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "confesiones_carbonbox"
+        },
         "matchType": "allConditions",
         "filters": {
-          "conditions": [{ "keyName": "confessionId", "condition": "eq", "keyValue": "={{ $json.body.id }}" }]
+          "conditions": [
+            {
+              "keyName": "confessionId",
+              "condition": "eq",
+              "keyValue": "={{ $json.body.id }}"
+            }
+          ]
         },
         "returnAll": false,
         "limit": 1
@@ -256,7 +430,10 @@
       "name": "Enviar correo",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
-      "position": [840, 1000],
+      "position": [
+        840,
+        1000
+      ],
       "parameters": {
         "resource": "message",
         "operation": "send",
@@ -264,10 +441,14 @@
         "subject": "Tu penitencia ambiental — CarbonBox",
         "emailType": "html",
         "message": "={{ '<div style=\"background:#F3F4FA;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;\">' + '<div style=\"max-width:480px;margin:0 auto;background:#FFFFFF;border-radius:14px;overflow:hidden;border:1px solid #E3E5F0;\">' + '<div style=\"background:#1620A4;padding:18px 24px;\">' + '<p style=\"margin:0;color:#FFFFFF;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;\">CarbonBox &middot; Confesionario Ambiental</p>' + '</div>' + '<div style=\"padding:28px 24px;\">' + '<p style=\"margin:0 0 16px;color:#333A4D;font-size:15px;line-height:1.5;\">Hola,</p>' + '<p style=\"margin:0 0 20px;color:#333A4D;font-size:15px;line-height:1.5;\">Aquí está tu confesión y la penitencia que te asignó el Padre Carbono:</p>' + '<div style=\"background:#F3F4FA;border-radius:10px;padding:18px 20px;margin:0 0 22px;\">' + '<p style=\"margin:0 0 4px;color:#7A82A0;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;\">Pecado confesado</p>' + '<p style=\"margin:0 0 16px;color:#333A4D;font-size:14px;font-style:italic;\">\"' + $json.pecado + '\"</p>' + '<p style=\"margin:0 0 4px;color:#7A82A0;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;\">Tu penitencia</p>' + '<p style=\"margin:0;color:#1620A4;font-size:15px;font-weight:700;\">' + $json.penitencia + '</p>' + '</div>' + '<div style=\"text-align:center;margin:0 0 8px;\">' + '<a href=\"https://TU-N8N.app.n8n.cloud/webhook/confesion-card?id=' + $json.confessionId + '\" style=\"display:inline-block;background:#2F6B4A;color:#FFFFFF;text-decoration:none;font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;padding:14px 28px;border-radius:999px;\">Ver y guardar tu tarjeta</a>' + '</div>' + '</div>' + '<div style=\"padding:16px 24px;border-top:1px solid #E3E5F0;text-align:center;\">' + '<p style=\"margin:0;color:#7A82A0;font-size:11px;\">Powered by <strong style=\"color:#2F6B4A;\">CarbonBox</strong></p>' + '</div>' + '</div>' + '</div>' }}",
-        "options": { "appendAttribution": false }
+        "options": {
+          "appendAttribution": false
+        }
       },
       "credentials": {
-        "gmailOAuth2": { "name": "Gmail CarbonBox" }
+        "gmailOAuth2": {
+          "name": "Gmail CarbonBox"
+        }
       },
       "notes": "Reemplaza 'https://TU-N8N.app.n8n.cloud' por el dominio real de tu instancia de n8n."
     },
@@ -276,7 +457,10 @@
       "name": "Responder email OK",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
-      "position": [1140, 1000],
+      "position": [
+        1140,
+        1000
+      ],
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ { \"ok\": true } }}"
@@ -284,25 +468,167 @@
     }
   ],
   "connections": {
-    "Recibir confesión": { "main": [[{ "node": "Transcribir confesión (Whisper)", "type": "main", "index": 0 }]] },
-    "Transcribir confesión (Whisper)": { "main": [[{ "node": "Generar penitencia (Padre Carbono)", "type": "main", "index": 0 }]] },
-    "Generar penitencia (Padre Carbono)": { "main": [[{ "node": "Parsear JSON de la IA", "type": "main", "index": 0 }]] },
-    "Parsear JSON de la IA": { "main": [[{ "node": "Es pecado ambiental", "type": "main", "index": 0 }]] },
-    "Es pecado ambiental": {
+    "Recibir confesión": {
       "main": [
-        [{ "node": "Generar ID de confesión", "type": "main", "index": 0 }],
-        [{ "node": "Responder a la cabina", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Transcribir confesión (Whisper)",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
-    "Generar ID de confesión": { "main": [[{ "node": "Guardar confesión", "type": "main", "index": 0 }]] },
-    "Guardar confesión": { "main": [[{ "node": "Agregar URL de tarjeta", "type": "main", "index": 0 }]] },
-    "Agregar URL de tarjeta": { "main": [[{ "node": "Responder a la cabina", "type": "main", "index": 0 }]] },
-    "Recibir tarjeta": { "main": [[{ "node": "Buscar confesión", "type": "main", "index": 0 }]] },
-    "Buscar confesión": { "main": [[{ "node": "Armar página de tarjeta", "type": "main", "index": 0 }]] },
-    "Armar página de tarjeta": { "main": [[{ "node": "Responder tarjeta HTML", "type": "main", "index": 0 }]] },
-    "Recibir email": { "main": [[{ "node": "Buscar confesión (email)", "type": "main", "index": 0 }]] },
-    "Buscar confesión (email)": { "main": [[{ "node": "Enviar correo", "type": "main", "index": 0 }]] },
-    "Enviar correo": { "main": [[{ "node": "Responder email OK", "type": "main", "index": 0 }]] }
+    "Transcribir confesión (Whisper)": {
+      "main": [
+        [
+          {
+            "node": "Generar penitencia (Padre Carbono)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar penitencia (Padre Carbono)": {
+      "main": [
+        [
+          {
+            "node": "Parsear JSON de la IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parsear JSON de la IA": {
+      "main": [
+        [
+          {
+            "node": "Es pecado ambiental",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Es pecado ambiental": {
+      "main": [
+        [
+          {
+            "node": "Generar ID de confesión",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Responder a la cabina",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar ID de confesión": {
+      "main": [
+        [
+          {
+            "node": "Guardar confesión",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar confesión": {
+      "main": [
+        [
+          {
+            "node": "Agregar URL de tarjeta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar URL de tarjeta": {
+      "main": [
+        [
+          {
+            "node": "Responder a la cabina",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recibir tarjeta": {
+      "main": [
+        [
+          {
+            "node": "Buscar confesión",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar confesión": {
+      "main": [
+        [
+          {
+            "node": "Armar página de tarjeta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar página de tarjeta": {
+      "main": [
+        [
+          {
+            "node": "Responder tarjeta HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recibir email": {
+      "main": [
+        [
+          {
+            "node": "Buscar confesión (email)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar confesión (email)": {
+      "main": [
+        [
+          {
+            "node": "Enviar correo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar correo": {
+      "main": [
+        [
+          {
+            "node": "Responder email OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
   },
   "active": false,
   "settings": {
