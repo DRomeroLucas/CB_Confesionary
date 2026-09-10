@@ -28,13 +28,13 @@ flowchart LR
 
 | Opción | Costo/complejidad | Cómo funciona | Recomendado si... |
 |---|---|---|---|
-| **Tablet/PC con página web** (incluida en este repo, `booth/index.html`) | Bajo | El navegador graba con la API `MediaRecorder` y sube el audio al webhook de n8n | Ya tienes una tablet o laptop barata — **es el camino más rápido para un MVP** |
+| **Tablet/PC con página web** (incluida en este repo, `index.html`) | Bajo | El navegador graba con la API `MediaRecorder` y sube el audio al webhook de n8n | Ya tienes una tablet o laptop barata — **es el camino más rápido para un MVP** |
 | Raspberry Pi + botón físico + micrófono USB | Medio | Un script en Python graba al presionar el botón y hace el POST HTTP | Quieres una experiencia más "objeto físico" sin pantalla visible |
 | Grabadora dedicada (Zoom H1, etc.) + subida manual | Bajo costo, alto esfuerzo humano | Alguien del staff sube el archivo manualmente a un formulario que dispara n8n | Es un evento pequeño y puntual, sin afán de automatizar del todo |
 | ESP32 + módulo de audio | Alto (requiere firmware) | Igual que Raspberry Pi pero más barato y más frágil de programar | Ya tienes experiencia en electrónica embebida |
 
 **Recomendación:** empieza con la tablet/PC. Es lo que dejé construido en
-[`booth/index.html`](booth/index.html) — no necesitas montar hardware nuevo, solo
+[`index.html`](index.html) — no necesitas montar hardware nuevo, solo
 poner una tablet o laptop dentro de la cabina con el navegador abierto en pantalla
 completa.
 
@@ -56,7 +56,7 @@ El workflow **"Confesionario Ambiental IA"** ya está creado directamente en tu 
    quede escuchando una ejecución de prueba.
 3. Manda un audio de prueba a `https://kim-carbonbox.app.n8n.cloud/webhook-test/confesion`
    (campo `audio`, `multipart/form-data`) — por ejemplo pegando esa URL en el ⚙️ de
-   [`booth/index.html`](booth/index.html) y grabando una confesión de prueba.
+   [`index.html`](index.html) y grabando una confesión de prueba.
 4. Revisa en n8n que cada nodo haya corrido bien y que la respuesta tenga
    `pecado`, `categoria`, `penitencia`, `dificultad` y `mensaje`.
 
@@ -105,7 +105,7 @@ para importar (`Import from File` en n8n). Nodos:
 ## 4. La tarjeta / cómo se la lleva la persona
 
 El JSON que devuelve n8n se renderiza como una tarjeta tipo "boleta de penitencia"
-directamente en `booth/index.html` (mismo archivo que grabó el audio). A partir de
+directamente en `index.html` (mismo archivo que grabó el audio). A partir de
 ahí tienes varias formas de entregarla, de más simple a más elaborada:
 
 | Entrega | Qué necesitas |
@@ -121,7 +121,7 @@ necesitar impresora ni pedir datos de contacto.
 
 ## 5. Prueba rápida sin n8n
 
-Abrí [`booth/index.html`](booth/index.html) directo en un navegador: si no hay un
+Abrí [`index.html`](index.html) directo en un navegador: si no hay un
 webhook configurado (o falla la conexión), entra en **modo demo** y genera una
 penitencia de ejemplo localmente, así puedes ver y ajustar el diseño de la tarjeta
 antes de conectar el backend real.
