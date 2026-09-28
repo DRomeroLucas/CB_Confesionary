@@ -445,7 +445,34 @@
 
   function showStage(name){
     Object.entries(stages).forEach(([k, el]) => { el.hidden = (k !== name); });
+    clearInactivityTimer();
   }
+
+  // ---------- Reinicio por inactividad (solo en la pantalla de resultado) ----------
+  let inactivityTimer = null;
+  const INACTIVITY_MS = 25000;
+
+  function clearInactivityTimer(){
+    if (inactivityTimer) clearTimeout(inactivityTimer);
+    inactivityTimer = null;
+  }
+
+  function startInactivityTimer(){
+    clearInactivityTimer();
+    inactivityTimer = setTimeout(() => {
+      showSharePanel(false);
+      showStage('idle');
+    }, INACTIVITY_MS);
+  }
+
+  // Cualquier interacción (incluido escribir el correo) reinicia el conteo,
+  // pero solo si el temporizador ya está activo (es decir, estamos en resultado).
+  function bumpInactivityTimer(){
+    if (inactivityTimer !== null) startInactivityTimer();
+  }
+  ['click', 'keydown', 'input', 'touchstart'].forEach((evt) => {
+    document.addEventListener(evt, bumpInactivityTimer, { passive: true });
+  });
 
   // URL fija del webhook de n8n — sin pantalla de ajustes que se pueda
   // olvidar configurar el día del evento.
@@ -578,6 +605,7 @@
     }
 
     showStage('result');
+    startInactivityTimer();
   }
 
   function showSharePanel(visible){
