@@ -269,6 +269,27 @@
     text-transform:uppercase;
   }
 
+  .inactivity-hint{
+    margin-top:14px;
+    font-size:11px;
+    font-weight:500;
+    color:var(--ink-faint);
+    text-align:center;
+  }
+  .inactivity-hint #inactivityCount{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700;
+    color:var(--brand-amber);
+  }
+  .inactivity-hint.warn #inactivityCount{
+    color:var(--brand-amber);
+    animation: pulse-count 1s ease-in-out infinite;
+  }
+  @keyframes pulse-count{
+    0%,100%{ opacity:1; }
+    50%{ opacity:.4; }
+  }
+
   .share-panel{
     box-sizing:border-box;
     width:0;
@@ -396,6 +417,7 @@
 
         <p class="demo-flag" id="demoFlag" hidden>Modo demo — sin conexión al confesionario real</p>
         <button class="btn primary" id="btnReset" style="margin-top:16px;">Nueva confesión</button>
+        <p class="inactivity-hint" id="inactivityHint">Esta pantalla se reiniciará en <span id="inactivityCount">25</span>s por inactividad</p>
       </div>
 
       <!-- Estado: fuera de alcance (no es un pecado ambiental) -->
@@ -450,15 +472,35 @@
 
   // ---------- Reinicio por inactividad (solo en la pantalla de resultado) ----------
   let inactivityTimer = null;
+  let inactivityTick = null;
+  let inactivitySecondsLeft = 0;
   const INACTIVITY_MS = 25000;
+  const INACTIVITY_WARN_AT = 5; // segundos restantes en los que el contador parpadea
 
   function clearInactivityTimer(){
     if (inactivityTimer) clearTimeout(inactivityTimer);
+    if (inactivityTick) clearInterval(inactivityTick);
     inactivityTimer = null;
+    inactivityTick = null;
+    $('inactivityHint').classList.remove('warn');
+  }
+
+  function updateInactivityDisplay(){
+    $('inactivityCount').textContent = String(inactivitySecondsLeft);
+    $('inactivityHint').classList.toggle('warn', inactivitySecondsLeft <= INACTIVITY_WARN_AT);
   }
 
   function startInactivityTimer(){
     clearInactivityTimer();
+    inactivitySecondsLeft = Math.round(INACTIVITY_MS / 1000);
+    updateInactivityDisplay();
+
+    inactivityTick = setInterval(() => {
+      inactivitySecondsLeft -= 1;
+      if (inactivitySecondsLeft < 0) return;
+      updateInactivityDisplay();
+    }, 1000);
+
     inactivityTimer = setTimeout(() => {
       showSharePanel(false);
       showStage('idle');
