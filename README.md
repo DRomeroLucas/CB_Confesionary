@@ -145,16 +145,18 @@ Cuando la confesión es válida, la cabina ahora muestra un **código QR** y un 
 - La cabina arma el QR con ese `cardUrl` (usando `api.qrserver.com`, sin librerías
   extra) y lo muestra bajo la tarjeta.
 - Esa URL abre una página HTML (rama nueva del mismo workflow, `GET /confesion-card`)
-  con la tarjeta ya armada y un botón **"Descargar imagen"** que usa `dom-to-image`
-  para generar la tarjeta como PNG directamente en el celular de la persona — sin
-  necesitar un servicio externo de renderizado de imágenes. (Usamos `dom-to-image`
-  y no `html2canvas` porque este último crea un iframe interno que algunos
-  navegadores/apps móviles bloquean por seguridad.)
-- **iPhone/Safari no descarga archivos generados por JavaScript** (ignora el
-  atributo de descarga automática). Por eso, además de intentar la descarga
-  automática (funciona en Android/escritorio), la página también **muestra la
-  imagen en pantalla** con la instrucción "mantén presionada la imagen y elige
-  Guardar imagen" — funciona igual en iPhone, Android y escritorio.
+  donde la tarjeta **ya es una imagen real** (SVG armado en el propio nodo de n8n,
+  servida como `data:image/svg+xml` en un `<img>`) — sin botón ni JavaScript de
+  generación de por medio. Debajo hay un aviso: "Mantén presionada la imagen y
+  elige 'Guardar imagen' (o toma una captura de pantalla)".
+
+  > **Historial:** se probaron dos enfoques intermedios que resultaron poco
+  > confiables en iPhone/Safari — `html2canvas` (crea un iframe que algunos
+  > navegadores bloquean por seguridad) y `dom-to-image` (falla o se cuelga en
+  > ciertas versiones de iOS). Renderizar la tarjeta directamente como SVG del
+  > lado del servidor evita todos esos problemas: es una imagen de verdad desde
+  > que carga la página, así que "mantener presionado para guardar" funciona de
+  > forma nativa en cualquier sistema operativo, sin depender de ninguna librería.
 - Si alguien no puede escanear, puede escribir su correo: la cabina llama a
   `POST /webhook/confesion-email` (`{ id, email }`), que busca la confesión en la
   Data Table y la envía por Gmail (credencial `Gmail CarbonBox`) con el enlace a su
