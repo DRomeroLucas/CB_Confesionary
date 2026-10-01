@@ -179,6 +179,21 @@
   .hint{ font-size:14px; font-weight:500; color:var(--ink-faint); letter-spacing:.02em; margin:0; }
   .timer{ font-family:'JetBrains Mono', monospace; font-weight:700; font-size:22px; color:var(--brand-amber); letter-spacing:.06em; }
 
+  .transcript-quote{
+    font-size:18px;
+    font-weight:500;
+    font-style:italic;
+    color:var(--ink);
+    background:var(--surface);
+    border:1px solid var(--brand-gray);
+    border-radius:12px;
+    padding:16px 18px;
+    margin:0;
+    max-width:32ch;
+    line-height:1.4;
+  }
+  .confirm-row{ display:flex; gap:12px; }
+
   .btn{
     font-family:'Poppins', sans-serif;
     font-weight:600;
@@ -397,6 +412,17 @@
         <p class="lede" id="processingMsg">El Padre Carbono está escuchando tu confesión...</p>
       </div>
 
+      <!-- Estado: confirmar transcripción -->
+      <div class="stage" id="stageConfirm" hidden>
+        <p class="lede">Esto fue lo que escuchamos:</p>
+        <p class="transcript-quote" id="transcriptQuote">"—"</p>
+        <p class="hint">¿Es correcto?</p>
+        <div class="confirm-row">
+          <button class="btn" id="btnConfirmNo">No, repetir</button>
+          <button class="btn primary" id="btnConfirmYes">Sí, continuar</button>
+        </div>
+      </div>
+
       <!-- Estado: resultado -->
       <div class="stage" id="stageResult" hidden style="min-height:auto;">
         <div class="ticket" id="ticket">
@@ -460,6 +486,7 @@
     idle: $('stageIdle'),
     recording: $('stageRecording'),
     processing: $('stageProcessing'),
+    confirm: $('stageConfirm'),
     result: $('stageResult'),
     offTopic: $('stageOffTopic'),
     error: $('stageError'),
@@ -554,6 +581,8 @@
     if (stream) stream.getTracks().forEach(t => t.stop());
   }
 
+  let pendingTranscript = null;
+
   async function onRecordingStop(){
     showStage('processing');
     $('processingMsg').textContent = 'El Padre Carbono está escuchando tu confesión...';
@@ -568,14 +597,49 @@
       clearTimeout(timeout);
       if (!res.ok) throw new Error('respuesta no OK');
       const data = await res.json();
+      const text = (data.text || '').trim();
+      if (!text) throw new Error('transcripción vacía');
+      showConfirm(text);
+    } catch (err) {
+      // Si el backend real falla (o estamos en un entorno que bloquea fetch externo,
+      // como una vista previa aislada), caemos a modo demo en vez de romper la demo.
+      await fakeDelay();
+      renderResult(demoPenitencia(), true);
+    }
+  }
+
+  function showConfirm(text){
+    pendingTranscript = text;
+    $('transcriptQuote').textContent = `"${text}"`;
+    showStage('confirm');
+  }
+
+  $('btnConfirmNo').addEventListener('click', () => showStage('idle'));
+  $('btnConfirmYes').addEventListener('click', () => confirmAndGenerate());
+
+  async function confirmAndGenerate(){
+    showStage('processing');
+    $('processingMsg').textContent = 'El Padre Carbono está pensando tu penitencia...';
+
+    try {
+      const confirmUrl = webhookUrl.replace(/confesion$/, 'confesion-confirmar');
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 20000);
+      const res = await fetch(confirmUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: pendingTranscript }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeout);
+      if (!res.ok) throw new Error('respuesta no OK');
+      const data = await res.json();
       if (data.valida === false) {
         showOffTopic(data.mensaje);
       } else {
         renderResult(normalize(data), false);
       }
     } catch (err) {
-      // Si el backend real falla (o estamos en un entorno que bloquea fetch externo,
-      // como una vista previa aislada), caemos a modo demo en vez de romper la demo.
       await fakeDelay();
       renderResult(demoPenitencia(), true);
     }

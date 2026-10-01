@@ -20,29 +20,6 @@
       }
     },
     {
-      "id": "636c2f42-0a64-4e74-8efb-1aba5145bacc",
-      "name": "Transcribir confesión (Whisper)",
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "typeVersion": 2.3,
-      "position": [
-        540,
-        300
-      ],
-      "parameters": {
-        "resource": "audio",
-        "operation": "transcribe",
-        "binaryPropertyName": "audio",
-        "options": {
-          "language": "es"
-        }
-      },
-      "credentials": {
-        "openAiApi": {
-          "name": "n8n free OpenAI API credits"
-        }
-      }
-    },
-    {
       "id": "96b08656-d179-4040-96c4-056d0a3a3434",
       "name": "Generar penitencia (Padre Carbono)",
       "type": "@n8n/n8n-nodes-langchain.anthropic",
@@ -93,6 +70,20 @@
         "mode": "runOnceForAllItems",
         "language": "javaScript",
         "jsCode": "const content = $input.first().json.content || [];\n\nlet raw;\nfor (let i = 0; i < content.length; i++) {\n  if (content[i] && content[i].type === 'text') {\n    raw = content[i].text;\n    break;\n  }\n}\n\nconst cleaned = (raw || '').replace(/```json/gi, '').replace(/```/g, '').trim();\n\nlet data;\ntry {\n  data = JSON.parse(cleaned);\n} catch (e) {\n  data = {\n    valida: true,\n    pecado: 'No se pudo interpretar la confesion',\n    categoria: 'otro',\n    penitencia: 'Vuelve a intentarlo, el Padre Carbono no te escucho bien.',\n    dificultad: 'baja',\n    mensaje: 'A veces hasta la IA necesita una segunda confesion.'\n  };\n}\n\nif (typeof data.valida === 'undefined') {\n  data.valida = true;\n}\n\nreturn [{ json: data }];"
+      }
+    },
+    {
+      "id": "2ed732f3-c905-432a-8f9b-70e72f098271",
+      "name": "Responder a la cabina",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2460,
+        260
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
       }
     },
     {
@@ -155,8 +146,9 @@
         "operation": "insert",
         "dataTableId": {
           "__rl": true,
-          "mode": "name",
-          "value": "confesiones_carbonbox"
+          "mode": "id",
+          "value": "Ay2j8xF1vOeSsj7W",
+          "cachedResultName": "confesiones_carbonbox"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -173,42 +165,69 @@
             {
               "id": "confessionId",
               "displayName": "confessionId",
-              "type": "string"
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
             },
             {
               "id": "pecado",
               "displayName": "pecado",
-              "type": "string"
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
             },
             {
               "id": "categoria",
               "displayName": "categoria",
-              "type": "string"
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
             },
             {
               "id": "penitencia",
               "displayName": "penitencia",
-              "type": "string"
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
             },
             {
               "id": "dificultad",
               "displayName": "dificultad",
-              "type": "string"
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
             },
             {
               "id": "mensaje",
               "displayName": "mensaje",
-              "type": "string"
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
             },
             {
               "id": "email",
               "displayName": "email",
-              "type": "string"
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
             }
           ]
         }
-      },
-      "notes": "Requiere la Data Table 'confesiones_carbonbox' (columnas: confessionId, pecado, categoria, penitencia, dificultad, mensaje, email como texto)."
+      }
     },
     {
       "id": "5e527f00-45f1-4414-a7c2-08ddc10efc72",
@@ -274,21 +293,6 @@
             }
           ]
         }
-      },
-      "notes": "Reemplaza 'https://TU-N8N.app.n8n.cloud' por el dominio real de tu instancia de n8n."
-    },
-    {
-      "id": "2ed732f3-c905-432a-8f9b-70e72f098271",
-      "name": "Responder a la cabina",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.5,
-      "position": [
-        2460,
-        260
-      ],
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ $json }}"
       }
     },
     {
@@ -321,8 +325,9 @@
         "operation": "get",
         "dataTableId": {
           "__rl": true,
-          "mode": "name",
-          "value": "confesiones_carbonbox"
+          "mode": "id",
+          "value": "Ay2j8xF1vOeSsj7W",
+          "cachedResultName": "confesiones_carbonbox"
         },
         "matchType": "allConditions",
         "filters": {
@@ -408,8 +413,9 @@
         "operation": "get",
         "dataTableId": {
           "__rl": true,
-          "mode": "name",
-          "value": "confesiones_carbonbox"
+          "mode": "id",
+          "value": "Ay2j8xF1vOeSsj7W",
+          "cachedResultName": "confesiones_carbonbox"
         },
         "matchType": "allConditions",
         "filters": {
@@ -449,8 +455,7 @@
         "gmailOAuth2": {
           "name": "Gmail CarbonBox"
         }
-      },
-      "notes": "Reemplaza 'https://TU-N8N.app.n8n.cloud' por el dominio real de tu instancia de n8n."
+      }
     },
     {
       "id": "cc402e80-5302-414d-b254-01c4da237ac3",
@@ -465,31 +470,109 @@
         "respondWith": "json",
         "responseBody": "={{ { \"ok\": true } }}"
       }
+    },
+    {
+      "id": "85e037a7-cfaf-44b9-90a0-54d3b77feb49",
+      "name": "Responder transcripción",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        840,
+        420
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"text\": $json.text } }}"
+      }
+    },
+    {
+      "id": "59b2d651-03ef-4495-8751-0b05f4959dcb",
+      "name": "Recibir confirmación",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        460
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "confesion-confirmar",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "b0d46fe7-b491-48b4-a7aa-a9d9b278e3a1",
+      "name": "Normalizar texto confirmado",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        460,
+        460
+      ],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "n1",
+              "name": "text",
+              "value": "={{ $json.body.text }}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "7e61d3ca-bbff-44a1-a0b5-38efd95a6650",
+      "name": "Transcribir confesión (Whisper)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        540,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/audio/transcriptions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "audio"
+            },
+            {
+              "parameterType": "formData",
+              "name": "model",
+              "value": "whisper-1"
+            },
+            {
+              "parameterType": "formData",
+              "name": "language",
+              "value": "es"
+            },
+            {
+              "parameterType": "formData",
+              "name": "prompt",
+              "value": "Confesion de un pecado ambiental cotidiano: movilidad, transporte, vuelos, auto, energia, luces, aire acondicionado, agua, ducha, grifo, consumo, ropa, plastico, residuos, basura, reciclaje, aceite, desague, alimentacion, carne, comida."
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "openAiApi": {
+          "name": "n8n free OpenAI API credits"
+        }
+      }
     }
   ],
   "connections": {
-    "Recibir confesión": {
-      "main": [
-        [
-          {
-            "node": "Transcribir confesión (Whisper)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Transcribir confesión (Whisper)": {
-      "main": [
-        [
-          {
-            "node": "Generar penitencia (Padre Carbono)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Generar penitencia (Padre Carbono)": {
       "main": [
         [
@@ -623,6 +706,50 @@
         [
           {
             "node": "Responder email OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recibir confirmación": {
+      "main": [
+        [
+          {
+            "node": "Normalizar texto confirmado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar texto confirmado": {
+      "main": [
+        [
+          {
+            "node": "Generar penitencia (Padre Carbono)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recibir confesión": {
+      "main": [
+        [
+          {
+            "node": "Transcribir confesión (Whisper)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribir confesión (Whisper)": {
+      "main": [
+        [
+          {
+            "node": "Responder transcripción",
             "type": "main",
             "index": 0
           }

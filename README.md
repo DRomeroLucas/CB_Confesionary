@@ -54,9 +54,18 @@ Rutas activas:
 
 | Ruta | Método | Para qué |
 |---|---|---|
-| `/webhook/confesion` | POST | Recibe el audio, genera la penitencia |
+| `/webhook/confesion` | POST | Recibe el audio y **solo lo transcribe** (Whisper) — devuelve `{ text }` |
+| `/webhook/confesion-confirmar` | POST (`{ text }`) | Recibe el texto ya confirmado por la persona y genera la penitencia |
 | `/webhook/confesion-card` | GET (`?id=...`) | Página con la tarjeta + botón de descarga (destino del QR) |
 | `/webhook/confesion-email` | POST | Envía la tarjeta por correo |
+
+**¿Por qué dos pasos para la confesión?** Para que la persona pueda corregir errores
+de transcripción (acentos, pronunciación, ruido de fondo) antes de que se genere la
+penitencia: la cabina graba → `/confesion` transcribe y muestra "esto fue lo que
+escuchamos" → la persona confirma o repite → solo si confirma, `/confesion-confirmar`
+genera la penitencia con Claude. El nodo de Whisper también recibe un `prompt` con
+vocabulario ambiental típico (residuos, aceite, desagüe, reciclaje, etc.) para reducir
+errores de reconocimiento en esas palabras.
 
 ## 3.1 El flujo de n8n (referencia / cómo está armado)
 
