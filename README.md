@@ -63,9 +63,15 @@ Rutas activas:
 de transcripción (acentos, pronunciación, ruido de fondo) antes de que se genere la
 penitencia: la cabina graba → `/confesion` transcribe y muestra "esto fue lo que
 escuchamos" → la persona confirma o repite → solo si confirma, `/confesion-confirmar`
-genera la penitencia con Claude. El nodo de Whisper también recibe un `prompt` con
-vocabulario ambiental típico (residuos, aceite, desagüe, reciclaje, etc.) para reducir
-errores de reconocimiento en esas palabras.
+genera la penitencia con Claude.
+
+> **Nota técnica:** se intentó además darle a Whisper una pista de vocabulario
+> ambiental (parámetro `prompt`) para reducir errores en palabras como "desagüe" o
+> "reciclaje", pero eso requiere llamar a la API de OpenAI directamente — y la
+> credencial actual (`n8n free OpenAI API credits`) es un crédito **gestionado por
+> n8n**, no una llave real de OpenAI, así que solo funciona a través del nodo nativo
+> de IA de n8n (sin esa opción de `prompt`). Si en algún momento conectan una llave
+> de OpenAI propia, se puede retomar esa mejora.
 
 ## 3.1 El flujo de n8n (referencia / cómo está armado)
 

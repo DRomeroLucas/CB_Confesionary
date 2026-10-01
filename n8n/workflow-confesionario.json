@@ -165,65 +165,37 @@
             {
               "id": "confessionId",
               "displayName": "confessionId",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
+              "type": "string"
             },
             {
               "id": "pecado",
               "displayName": "pecado",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
+              "type": "string"
             },
             {
               "id": "categoria",
               "displayName": "categoria",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
+              "type": "string"
             },
             {
               "id": "penitencia",
               "displayName": "penitencia",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
+              "type": "string"
             },
             {
               "id": "dificultad",
               "displayName": "dificultad",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
+              "type": "string"
             },
             {
               "id": "mensaje",
               "displayName": "mensaje",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
+              "type": "string"
             },
             {
               "id": "email",
               "displayName": "email",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
+              "type": "string"
             }
           ]
         }
@@ -525,44 +497,20 @@
       }
     },
     {
-      "id": "7e61d3ca-bbff-44a1-a0b5-38efd95a6650",
+      "id": "1bf7f852-816e-409f-839f-080b9a9859c8",
       "name": "Transcribir confesión (Whisper)",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
       "position": [
         540,
         300
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.openai.com/v1/audio/transcriptions",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "openAiApi",
-        "sendBody": true,
-        "contentType": "multipart-form-data",
-        "bodyParameters": {
-          "parameters": [
-            {
-              "parameterType": "formBinaryData",
-              "name": "file",
-              "inputDataFieldName": "audio"
-            },
-            {
-              "parameterType": "formData",
-              "name": "model",
-              "value": "whisper-1"
-            },
-            {
-              "parameterType": "formData",
-              "name": "language",
-              "value": "es"
-            },
-            {
-              "parameterType": "formData",
-              "name": "prompt",
-              "value": "Confesion de un pecado ambiental cotidiano: movilidad, transporte, vuelos, auto, energia, luces, aire acondicionado, agua, ducha, grifo, consumo, ropa, plastico, residuos, basura, reciclaje, aceite, desague, alimentacion, carne, comida."
-            }
-          ]
+        "resource": "audio",
+        "operation": "transcribe",
+        "binaryPropertyName": "audio",
+        "options": {
+          "language": "es"
         }
       },
       "credentials": {
