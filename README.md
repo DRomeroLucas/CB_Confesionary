@@ -146,9 +146,13 @@ Cuando la confesión es válida, la cabina ahora muestra un **código QR** y un 
   extra) y lo muestra bajo la tarjeta.
 - Esa URL abre una página HTML (rama nueva del mismo workflow, `GET /confesion-card`)
   donde la tarjeta **ya es una imagen real** (SVG armado en el propio nodo de n8n,
-  servida como `data:image/svg+xml` en un `<img>`) — sin botón ni JavaScript de
-  generación de por medio. Debajo hay un aviso: "Mantén presionada la imagen y
-  elige 'Guardar imagen' (o toma una captura de pantalla)".
+  servido primero como `data:image/svg+xml` en un `<img>`) — sin botón ni
+  intervención manual de por medio. Debajo hay un aviso: "Mantén presionada la
+  imagen y elige 'Guardar imagen' (o toma una captura de pantalla)".
+- Apenas la imagen carga, un script mínimo (solo `Image` + `Canvas` nativos del
+  navegador, sin ninguna librería externa) la redibuja en un `<canvas>` oculto y
+  reemplaza el `src` por un `data:image/png`, así que lo que la persona termina
+  guardando con "mantener presionado" es un archivo `.png` normal y no un `.svg`.
 
   > **Historial:** se probaron dos enfoques intermedios que resultaron poco
   > confiables en iPhone/Safari — `html2canvas` (crea un iframe que algunos
@@ -156,7 +160,10 @@ Cuando la confesión es válida, la cabina ahora muestra un **código QR** y un 
   > ciertas versiones de iOS). Renderizar la tarjeta directamente como SVG del
   > lado del servidor evita todos esos problemas: es una imagen de verdad desde
   > que carga la página, así que "mantener presionado para guardar" funciona de
-  > forma nativa en cualquier sistema operativo, sin depender de ninguna librería.
+  > forma nativa en cualquier sistema operativo. La conversión a PNG con
+  > `canvas.toDataURL()` es la misma técnica nativa, sin librerías, así que
+  > mantiene esa confiabilidad y además entrega un formato más universal (PNG)
+  > en vez de SVG.
 - Si alguien no puede escanear, puede escribir su correo: la cabina llama a
   `POST /webhook/confesion-email` (`{ id, email }`), que busca la confesión en la
   Data Table y la envía por Gmail (credencial `Gmail CarbonBox`) con el enlace a su
