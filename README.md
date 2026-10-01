@@ -146,10 +146,15 @@ Cuando la confesión es válida, la cabina ahora muestra un **código QR** y un 
   extra) y lo muestra bajo la tarjeta.
 - Esa URL abre una página HTML (rama nueva del mismo workflow, `GET /confesion-card`)
   con la tarjeta ya armada y un botón **"Descargar imagen"** que usa `dom-to-image`
-  para guardar la tarjeta como PNG directamente en el celular de la persona — sin
+  para generar la tarjeta como PNG directamente en el celular de la persona — sin
   necesitar un servicio externo de renderizado de imágenes. (Usamos `dom-to-image`
   y no `html2canvas` porque este último crea un iframe interno que algunos
   navegadores/apps móviles bloquean por seguridad.)
+- **iPhone/Safari no descarga archivos generados por JavaScript** (ignora el
+  atributo de descarga automática). Por eso, además de intentar la descarga
+  automática (funciona en Android/escritorio), la página también **muestra la
+  imagen en pantalla** con la instrucción "mantén presionada la imagen y elige
+  Guardar imagen" — funciona igual en iPhone, Android y escritorio.
 - Si alguien no puede escanear, puede escribir su correo: la cabina llama a
   `POST /webhook/confesion-email` (`{ id, email }`), que busca la confesión en la
   Data Table y la envía por Gmail (credencial `Gmail CarbonBox`) con el enlace a su
