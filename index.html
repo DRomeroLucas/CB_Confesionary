@@ -443,7 +443,7 @@
 
         <p class="demo-flag" id="demoFlag" hidden>Modo demo — sin conexión al confesionario real</p>
         <button class="btn primary" id="btnReset" style="margin-top:16px;">Nueva confesión</button>
-        <p class="inactivity-hint" id="inactivityHint">Esta pantalla se reiniciará en <span id="inactivityCount">25</span>s por inactividad</p>
+        <p class="inactivity-hint" id="inactivityHint">Esta pantalla se reiniciará en <span id="inactivityCount">60</span>s por inactividad</p>
       </div>
 
       <!-- Estado: fuera de alcance (no es un pecado ambiental) -->
@@ -501,7 +501,7 @@
   let inactivityTimer = null;
   let inactivityTick = null;
   let inactivitySecondsLeft = 0;
-  const INACTIVITY_MS = 25000;
+  const INACTIVITY_MS = 60000;
   const INACTIVITY_WARN_AT = 5; // segundos restantes en los que el contador parpadea
 
   function clearInactivityTimer(){
